@@ -13,19 +13,21 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent 
 
+import os
+import dj_database_url
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-t8$(wh!q^3)9767w1&y!1i6l)@dbc_#w*&k$f4o!q*wyr*6x!l'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -39,12 +41,21 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles', 
 
     'rest_framework', 
-    'product', 
+    'product',  
+    'corsheaders',
+] 
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173', 
+    'https://zaymapp.vercel.app',  
+    'https://tempotoys.shop', 
+    'https://pos-app-stock-management.onrender.com'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware', 
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -76,12 +87,20 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'pos',
+        'USER': 'postgres',
+        'PASSWORD': '8912',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }} 
+
+if os.environ.get('LOCAl') != 'TRUE': 
+    DATABASES['default'] = dj_database_url.parse(os.environ.get('DB_URL'))
+
 
 
 # Password validation
