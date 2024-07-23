@@ -6,10 +6,11 @@ function Home() {
 
     const [showSaleInput, setShowSaleInput] = useState(false); 
     const [showHome, setShowHome] = useState(true); 
+    const [products, setProducts] = useState([]); 
 
     useEffect(() => {
         getProductList().then((res) => {
-            console.log(res)
+            setProducts(res.data)
         })
     }, [])  
 
@@ -46,7 +47,7 @@ function Home() {
     } 
 
     {showSaleInput && 
-   <Sale />
+   <Sale products={products}/>
     }
     </>
   )
